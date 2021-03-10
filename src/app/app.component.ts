@@ -12,7 +12,7 @@ import { Message } from "./message";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"],
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
   user: any;
@@ -26,19 +26,15 @@ export class AppComponent {
   chatItems: QueryList<AppComponent>;
 
   constructor(private chatService: ChatService, private router: Router) {
-    this.message = new Message("", "assets/images/user.png", new Date());
+    this.message = new Message("", "assets/user.png", new Date());
     this.messages = [
-      new Message(
-        "Welcome to chatbot universe",
-        "assets/images/bot.png",
-        new Date()
-      ),
+      new Message("Welcome to chatbot universe", "assets/bot.png", new Date()),
     ];
   }
 
   ngOnInit() {
-    this.user = localStorage.getItem("user");
-    console.log(this.user, "logged in user");
+    // this.user = localStorage.getItem("user");
+    // console.log(this.user, "logged in user");
     if (!this.user) this.router.navigateByUrl("");
   }
 
@@ -51,20 +47,14 @@ export class AppComponent {
   sendMessage() {
     this.message["timestamp"] = new Date();
     this.messages.push(this.message);
-    console.log("messages send >>>> ", this.messages);
     this.chatService.getResponse(this.message["content"]).subscribe((res) => {
-      console.log("res >>>> ", res);
       this.messages.push(
-        new Message(
-          "res.result.fulfillment.speech",
-          "assets/images/bot.png",
-          new Date()
-        )
+        new Message(res.result.fulfillment.speech, "assets/bot.png", new Date())
       );
       this.scrollToBottom();
     });
 
-    this.message = new Message("", "assets/images/user.png", new Date());
+    this.message = new Message("", "assets/user.png", new Date());
   }
 
   private scrollToBottom(): void {

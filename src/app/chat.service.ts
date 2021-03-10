@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -10,15 +11,16 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
-  public getResponse(query: string) {
+  getResponse(query: string): Observable<any> {
     let data = {
       query: query,
       lang: "en",
       sessionId: "1234567",
     };
+    console.log("query >> ", data);
     let headers = new HttpHeaders();
-    headers.append("Authorization", `Bearer ${this.token}`);
+    headers = headers.append("Authorization", `Bearer ${this.token}`);
 
-    return this.http.post(`${this.baseURL}`, data, { headers: headers });
+    return this.http.post(this.baseURL, data, { headers: headers });
   }
 }
